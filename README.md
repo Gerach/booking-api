@@ -10,6 +10,7 @@ List of commands to operate this project
 ```sh
 docker compose up -d
 docker exec -it booking-api-php-cli-1 composer i
+docker exec -it booking-api-php-cli-1 php artisan migrate
 ```
 * Stop project
 ```sh

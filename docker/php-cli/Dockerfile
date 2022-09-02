@@ -1,8 +1,6 @@
 FROM php:8.1.10-cli
 
-#RUN apt-get update && \
-#    apt-get install wget && \
-#    apt-get clean
+RUN docker-php-ext-install pdo_mysql
 
 # install composer
 COPY ./docker/php-cli/install-composer.sh /tmp/
