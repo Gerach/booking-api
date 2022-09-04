@@ -24,8 +24,8 @@ Route::get('/', static function () {
     ]);
 });
 
-Route::get('/reservations', static function () {
-    return Inertia::render('Reservations');
-})->middleware(['auth', 'verified'])->name('reservations');
+Route::get('/home', static function () {
+    return Inertia::render('Home');
+})->middleware(['auth', 'verified'])->name('home');
 
 require __DIR__.'/auth.php';
