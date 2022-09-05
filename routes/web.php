@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Web\ReservationController;
+use App\Http\Resources\V1\ReservationCollection;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,7 +28,19 @@ Route::get('/', static function () {
 });
 
 Route::get('/home', static function () {
-    return Inertia::render('Home');
+    return Inertia::render('Home', [
+        'reservations' => new ReservationCollection(Auth::user()?->reservations()->get()),
+        'minReservation' => (new CarbonImmutable())->format('Y-m-d'),
+        'maxReservation' => (new CarbonImmutable())->modify('+3 months')->format('Y-m-d'),
+    ]);
 })->middleware(['auth', 'verified'])->name('home');
+
+Route::post('/reservation', [ReservationController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('make-reservation');
+
+Route::delete('/reservation/{id}', [ReservationController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('cancel-reservation');
 
 require __DIR__.'/auth.php';

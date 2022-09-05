@@ -16,7 +16,7 @@ class StoreReservationRequest extends FormRequest
     {
         /** @var User|null $user */
         $user = $this->user();
-        return $user && $user->tokenCan('create');
+        return (bool) $user;
     }
 
     /**

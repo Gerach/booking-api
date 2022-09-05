@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Handlers\ReservationHandler;
@@ -8,7 +8,8 @@ use App\Http\Requests\V1\StoreReservationRequest;
 use App\Http\Resources\V1\ReservationCollection;
 use App\Http\Resources\V1\ReservationResource;
 use App\Models\Reservation;
-use Illuminate\Http\Response;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Http\RedirectResponse;
 use Throwable;
 
 class ReservationController extends Controller
@@ -19,9 +20,6 @@ class ReservationController extends Controller
     {
     }
 
-    /**
-     * @return ReservationCollection
-     */
     public function index(): ReservationCollection
     {
         return $this->reservationHandler->handleFetch();
@@ -32,12 +30,14 @@ class ReservationController extends Controller
      *
      * @param StoreReservationRequest $request
      *
-     * @return ReservationResource
+     * @return RedirectResponse
      * @throws Throwable
      */
-    public function store(StoreReservationRequest $request): ReservationResource
+    public function store(StoreReservationRequest $request): RedirectResponse
     {
-        return $this->reservationHandler->handleCreate($request);
+        $this->reservationHandler->handleCreate($request);
+
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
@@ -55,15 +55,16 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Reservation $reservation
+     * @param $reservationId
      *
-     * @return Response
+     * @return RedirectResponse
      * @throws Throwable
      */
-    public function destroy(Reservation $reservation): Response
+    public function destroy($reservationId): RedirectResponse
     {
+        $reservation = Reservation::find($reservationId);
         $this->reservationHandler->handleDestroy($reservation);
 
-        return new Response();
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 }
