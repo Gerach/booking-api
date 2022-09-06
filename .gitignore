@@ -22,3 +22,6 @@ Homestead.json
 .idea
 .DS_Store
 app/.DS_Store
+
+_ide_helper.php
+_ide_helper_models.php

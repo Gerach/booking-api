@@ -28,3 +28,9 @@ services:
             - "13306:3306"
         env_file:
             - .env
+    node:
+        image: node:18-alpine
+        volumes:
+            - .:/var/www
+        working_dir: /var/www
+        tty: true

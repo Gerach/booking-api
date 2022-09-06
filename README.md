@@ -9,12 +9,10 @@
 List of commands to operate this project
 * Launch project
 ```sh
-docker compose up -d
-docker exec -it booking-api-php-cli-1 composer i
-docker exec -it booking-api-php-cli-1 php artisan migrate
-
-npm install
-npm run dev
+$ docker compose up -d
+$ docker exec -it booking-api-php-cli-1 composer i
+$ docker exec -it booking-api-node-1 npm i && npm run build
+$ docker exec -it booking-api-php-cli-1 php artisan migrate
 ```
 * Stop project
 ```sh
