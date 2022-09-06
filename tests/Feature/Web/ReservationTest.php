@@ -64,7 +64,6 @@ class ReservationTest extends TestCase
 
     public function test_reservation_can_be_made(): void
     {
-        $this->withoutMiddleware();
         $user = User::factory()->create();
 
         $reservationSince = (new CarbonImmutable())->modify('+2 days')->format('Y-m-d');
@@ -105,7 +104,6 @@ class ReservationTest extends TestCase
 
     public function test_reservation_can_be_cancelled(): void
     {
-        $this->withoutMiddleware();
         $user = User::factory()->create();
 
         $reservation = Reservation::factory()->create([

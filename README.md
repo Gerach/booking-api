@@ -16,11 +16,16 @@ $ docker exec -it booking-api-php-cli-1 php artisan migrate --seed
 ```
 * Stop project:
 ```sh
-$ docker compose stop
+$ docker compose down
 ```
 * Launch tests:
 ```sh
 $ docker exec -it booking-api-php-cli-1 php artisan test
+```
+In case some tests are failing testing cache create/clear may be needed:
+```shell
+$ docker exec -it booking-api-php-cli-1 php artisan config:cache --env=testing
+$ docker exec -it booking-api-php-cli-1 php artisan config:clear --env=testing
 ```
 
 ### WEB

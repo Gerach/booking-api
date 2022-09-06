@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -20,8 +21,8 @@ class ReservationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'reservedSince' => $this->reserved_since,
-            'reservedTill' => $this->reserved_till,
+            'reservedSince' => (new CarbonImmutable($this->reserved_since))->format('Y-m-d'),
+            'reservedTill' => (new CarbonImmutable($this->reserved_till))->format('Y-m-d'),
         ];
     }
 }
