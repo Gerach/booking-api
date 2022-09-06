@@ -31,19 +31,15 @@ class ReservationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $reservation1Since = (new CarbonImmutable())->modify('+2 days')->format('Y-m-d');
-        $reservation1Till = (new CarbonImmutable())->modify('+3 days')->format('Y-m-d');
-        $reservation2Since = (new CarbonImmutable())->modify('+5 days')->format('Y-m-d');
-        $reservation2Till = (new CarbonImmutable())->modify('+9 days')->format('Y-m-d');
         $reservation1 = Reservation::factory()->create([
             'user_id' => $user,
-            'reserved_since' => $reservation1Since,
-            'reserved_till' => $reservation1Till,
+            'reserved_since' => '2022-09-03',
+            'reserved_till' => '2022-09-05',
         ]);
         $reservation2 = Reservation::factory()->create([
             'user_id' => $user,
-            'reserved_since' => $reservation2Since,
-            'reserved_till' => $reservation2Till,
+            'reserved_since' => '2022-09-07',
+            'reserved_till' => '2022-09-10',
         ]);
 
         $response = $this->actingAs($user)->get('/home');
@@ -54,14 +50,14 @@ class ReservationTest extends TestCase
             ->has(
                 'reservations.data.0', fn (AssertableInertia $page) => $page
                     ->where('id', $reservation1->id)
-                    ->where('reservedSince', $reservation1Since)
-                    ->where('reservedTill', $reservation1Till)
+                    ->where('reservedSince', '2022-09-03')
+                    ->where('reservedTill', '2022-09-05')
             )
             ->has(
                 'reservations.data.1', fn (AssertableInertia $page) => $page
                 ->where('id', $reservation2->id)
-                ->where('reservedSince', $reservation2Since)
-                ->where('reservedTill', $reservation2Till)
+                ->where('reservedSince', '2022-09-07')
+                ->where('reservedTill', '2022-09-10')
             )
         );
     }
@@ -112,29 +108,24 @@ class ReservationTest extends TestCase
         $this->withoutMiddleware();
         $user = User::factory()->create();
 
-        $reservationSince = (new CarbonImmutable())->modify('+2 days')->format('Y-m-d');
-        $reservationTill = (new CarbonImmutable())->modify('+3 days')->format('Y-m-d');
         $reservation = Reservation::factory()->create([
             'user_id' => $user,
-            'reserved_since' => $reservationSince,
-            'reserved_till' => $reservationTill,
+            'reserved_since' => '2022-09-01',
+            'reserved_till' => '2022-09-02',
         ]);
         $vacancy1 = Vacancy::factory()->create([
-            'vacancy_date' => $reservationSince,
+            'vacancy_date' => '2022-09-01',
             'remaining_vacancies' => 9,
         ]);
         $vacancy2 = Vacancy::factory()->create([
-            'vacancy_date' => $reservationTill,
+            'vacancy_date' => '2022-09-02',
             'remaining_vacancies' => 9,
         ]);
 
         $response = $this->actingAs($user)->delete("/reservation/$reservation->id");
 
         $response->assertRedirect('/home');
-        $this->assertDatabaseMissing(Reservation::class, [
-            'reserved_since' => $reservationSince,
-            'reserved_till' => $reservationTill,
-        ]);
+        $this->assertDatabaseMissing(Reservation::class, ['id' => $reservation->id]);
         $this->assertDatabaseHas(Vacancy::class, [
             'id' => $vacancy1->id,
             'remaining_vacancies' => 10,
