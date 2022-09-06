@@ -71,8 +71,6 @@ final class ReservationHandler
 
     public function handleDestroy(Reservation $reservation): void
     {
-        $this->validateDestroy($reservation);
-
         try {
             DB::beginTransaction();
 
@@ -113,17 +111,6 @@ final class ReservationHandler
 
         throw ValidationException::withMessages([
             'reservedRange' => 'There are not enough vacancies for selected date range.',
-        ]);
-    }
-
-    private function validateDestroy(Reservation $reservation): void
-    {
-        if ($reservation->user_id === Auth::user()?->getAuthIdentifier()) {
-            return;
-        }
-
-        throw ValidationException::withMessages([
-            'user_id' => 'Resource does not belong to this user.',
         ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\V1\StoreReservationRequest;
 use App\Http\Resources\V1\ReservationCollection;
 use App\Http\Resources\V1\ReservationResource;
 use App\Models\Reservation;
+use Auth;
 use Illuminate\Http\Response;
 use Throwable;
 
@@ -49,6 +50,9 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation): ReservationResource
     {
+        if (Auth::user()?->getAuthIdentifier() !== $reservation->user_id) {
+            abort(401);
+        }
         return new ReservationResource($reservation);
     }
 
@@ -62,6 +66,10 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation): Response
     {
+        if (Auth::user()?->getAuthIdentifier() !== $reservation->user_id) {
+            abort(401);
+        }
+
         $this->reservationHandler->handleDestroy($reservation);
 
         return new Response();
